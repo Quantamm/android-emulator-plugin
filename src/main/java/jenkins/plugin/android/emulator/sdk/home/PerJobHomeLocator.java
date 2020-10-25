@@ -30,7 +30,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
 import hudson.FilePath;
-import jenkins.plugin.android.emulator.AndroidSDKConstants;
 import jenkins.plugin.android.emulator.Messages;
 
 /**
@@ -38,6 +37,8 @@ import jenkins.plugin.android.emulator.Messages;
  * unused packages when the job is gone.
  */
 public class PerJobHomeLocator extends HomeLocator {
+
+    private static final long serialVersionUID = 1L;
 
     @DataBoundConstructor
     public PerJobHomeLocator() {

@@ -381,4 +381,19 @@ public class SDKManagerCLIBuilder {
                 .withInput(StringUtils.repeat("y", "\r\n", packages.size()));
     }
 
+    public CLICommand<Void> arguments(String[] args) {
+        ArgumentListBuilder arguments = buildCommonOptions();
+        arguments.add(args);
+
+        EnvVars env = new EnvVars();
+        try {
+            buildProxyEnvVars(env);
+        } catch (URISyntaxException e) {
+            // fallback to CLI arguments
+            buildProxyArguments(arguments);
+        }
+
+        return new CLICommand<>(executable, arguments, env);
+    }
+
 }

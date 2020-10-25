@@ -26,13 +26,18 @@ package jenkins.plugin.android.emulator.sdk.home;
 import hudson.ExtensionPoint;
 import hudson.FilePath;
 import hudson.model.AbstractDescribableImpl;
+
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 
 /**
  * Strategy pattern that decides the location of the SDK home location for a
  * build.
  */
-public abstract class HomeLocator extends AbstractDescribableImpl<HomeLocator> implements ExtensionPoint {
+public abstract class HomeLocator extends AbstractDescribableImpl<HomeLocator> implements ExtensionPoint, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Called during the build on the master to determine the location of the

@@ -33,7 +33,6 @@ import hudson.FilePath;
 import hudson.model.Computer;
 import hudson.model.Executor;
 import hudson.model.Node;
-import jenkins.plugin.android.emulator.AndroidSDKConstants;
 import jenkins.plugin.android.emulator.Messages;
 
 /**
@@ -41,6 +40,8 @@ import jenkins.plugin.android.emulator.Messages;
  * node home folder {@code ~/android_$executorNumber/.android}.
  */
 public class PerExecutorHomeLocator extends HomeLocator {
+
+    private static final long serialVersionUID = 5353670448852887996L;
 
     @DataBoundConstructor
     public PerExecutorHomeLocator() {

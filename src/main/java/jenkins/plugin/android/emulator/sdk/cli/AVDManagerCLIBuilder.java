@@ -346,11 +346,6 @@ public class AVDManagerCLIBuilder {
         arguments.add(ARG_CLEAR_CACHE);
     }
 
-    /**
-     * Prepare the CLI command of sdkmanager to perform install operation.
-     * 
-     * @return the command line to execute.
-     */
     public CLICommand<Void> deleteAVD(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Device name is required");
@@ -365,6 +360,17 @@ public class AVDManagerCLIBuilder {
 
         // action options
         arguments.add(ARG_NAME, name);
+
+        EnvVars env = new EnvVars();
+        additionalEnv(env);
+
+        return new CLICommand<>(executable, arguments, env);
+    }
+
+    public CLICommand<Void> arguments(String[] args) {
+        ArgumentListBuilder arguments = new ArgumentListBuilder();
+        addGlobalOptions(arguments);
+        arguments.add(args);
 
         EnvVars env = new EnvVars();
         additionalEnv(env);

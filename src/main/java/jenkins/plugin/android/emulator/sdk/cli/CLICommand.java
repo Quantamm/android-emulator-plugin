@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.input.NullInputStream;
@@ -82,7 +83,7 @@ public class CLICommand<R> {
         return execute(new StreamTaskListener(new NullStream()));
     }
 
-    public R execute(@Nullable TaskListener output) throws IOException, InterruptedException {
+    public R execute(@Nonnull TaskListener output) throws IOException, InterruptedException {
         List<String> args = getArguments();
 
         // command.createLauncher(output)

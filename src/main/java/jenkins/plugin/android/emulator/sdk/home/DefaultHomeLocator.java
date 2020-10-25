@@ -38,6 +38,8 @@ import jenkins.plugin.android.emulator.Messages;
  */
 public class DefaultHomeLocator extends HomeLocator {
 
+    private static final long serialVersionUID = 3368523530762397938L;
+
     @DataBoundConstructor
     public DefaultHomeLocator() {
         // default constructor
@@ -49,7 +51,7 @@ public class DefaultHomeLocator extends HomeLocator {
     }
 
     @Extension
-    @Symbol("default")
+    @Symbol("home")
     public static class DescriptorImpl extends HomeLocatorDescriptor {
         @Override
         public String getDisplayName() {

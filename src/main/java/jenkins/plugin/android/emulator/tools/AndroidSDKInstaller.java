@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -197,7 +198,7 @@ public class AndroidSDKInstaller extends DownloadFromUrlInstaller {
                     // filter by component, the wildcards allow partial matching
                     .filter(p -> {
                         if (defaultPackage.endsWith("*")) {
-                            String defPkg = defaultPackage.replace("\\*", "");
+                            String defPkg = StringUtils.removeEnd(defaultPackage, "*");
                             return p.getId().startsWith(defPkg);
                         }
                         return defaultPackage.equals(p.getId());
