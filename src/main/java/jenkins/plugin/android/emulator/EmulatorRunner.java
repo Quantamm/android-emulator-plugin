@@ -94,7 +94,7 @@ public class EmulatorRunner {
         String avdHome = env.get(AndroidSDKConstants.ENV_ANDROID_AVD_HOME);
         String sdkRoot = env.get(Constants.ENV_VAR_ANDROID_SDK_ROOT); // FIXME required!
 
-        // remove installed components
+        // read installed components
         SDKPackages packages = SDKManagerCLIBuilder.with(sdkManager) //
             .channel(Channel.STABLE) // FIXME get that one configured in the installation tool
             .sdkRoot(sdkRoot) //
@@ -138,14 +138,14 @@ public class EmulatorRunner {
         // create new device
         listener.getLogger().println("AVD Manager is creating a new device named " + config.getAVDName() + " using sysimage "
                 + getSystemComponent());
-        
+
         AVDManagerCLIBuilder.with(avdManager) //
                 .silent(true) //
                 .packagePath(getSystemComponent()) //
                 .create(config.getAVDName()) //
                 .withEnv(env) //
                 .execute();
-        
+
         // create AVD descriptor file
         writeConfigFile(new FilePath(avdManager.getChannel(), avdHome));
 

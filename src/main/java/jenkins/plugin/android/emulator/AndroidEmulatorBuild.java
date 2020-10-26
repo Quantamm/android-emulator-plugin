@@ -129,20 +129,12 @@ public class AndroidEmulatorBuild extends SimpleBuildWrapper {
         sdk = sdk.forNode(node, listener);
         sdk = sdk.forEnvironment(initialEnvironment);
 
-        sdk.buildEnvVars(new EnvVarsAdapter(context));
+        EnvVarsAdapter contextEnv = new EnvVarsAdapter(context);
+        sdk.buildEnvVars(contextEnv);
 
         // configure home location
         FilePath homeLocation = homeLocationStrategy.locate(workspace);
-        if (homeLocation != null) {
-            context.env(Constants.ENV_VAR_ANDROID_SDK_HOME, homeLocation.getRemote());
-
-            FilePath emulatorLocation = homeLocation.child(AndroidSDKConstants.ANDROID_CACHE);
-            context.env(AndroidSDKConstants.ENV_ANDROID_EMULATOR_HOME, emulatorLocation.getRemote());
-
-            FilePath avdPath = emulatorLocation.child("avd");
-            avdPath.mkdirs(); // ensure that this folder exists
-            context.env(AndroidSDKConstants.ENV_ANDROID_AVD_HOME, avdPath.getRemote());
-        }
+        HomeLocator.buildEnvVars(homeLocation, contextEnv);
 
         // replace variable in user input
         final EnvVars env = initialEnvironment.overrideAll(context.getEnv());

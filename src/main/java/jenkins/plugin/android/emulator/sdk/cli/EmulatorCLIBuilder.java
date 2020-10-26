@@ -203,32 +203,7 @@ public class EmulatorCLIBuilder {
         // Network params
         arguments.add(ARG_PORTS, consolePort + "," + adbPort);
 
-        if (proxy != null) {
-            String userInfo = Util.fixEmptyAndTrim(proxy.getUserName());
-            // append password only if userName is defined
-            if (userInfo != null && StringUtils.isNotBlank(proxy.getEncryptedPassword())) {
-                Secret secret = Secret.decrypt(proxy.getEncryptedPassword());
-                if (secret != null) {
-                    userInfo += ":" + Util.fixEmptyAndTrim(secret.getPlainText());
-                }
-            }
-
-            arguments.add(ARG_PROXY);
-            try {
-                String proxyURL = new URI("http", userInfo, proxy.name, proxy.port, null, null, null).toString();
-                if (userInfo != null) {
-                    arguments.addMasked(proxyURL);
-                } else {
-                    arguments.add(proxyURL);
-                }
-            } catch (URISyntaxException e) {
-                if (userInfo != null) {
-                    arguments.addMasked(userInfo + "@" + proxy.name + ":" + proxy.port);
-                } else {
-                    arguments.add(proxy.name + ":" + proxy.port);
-                }
-            }
-        }
+        buildProxyArguments(arguments);
 
         // System params
         arguments.add(ARG_ACCEL, "auto");
@@ -244,4 +219,42 @@ public class EmulatorCLIBuilder {
         return new CLICommand<>(executable, arguments, env);
     }
 
+    private void buildProxyArguments(ArgumentListBuilder arguments) {
+        if (proxy == null) {
+            return;
+        }
+
+        String userInfo = Util.fixEmptyAndTrim(proxy.getUserName());
+        // append password only if userName is defined
+        if (userInfo != null && StringUtils.isNotBlank(proxy.getEncryptedPassword())) {
+            Secret secret = Secret.decrypt(proxy.getEncryptedPassword());
+            if (secret != null) {
+                userInfo += ":" + Util.fixEmptyAndTrim(secret.getPlainText());
+            }
+        }
+
+        arguments.add(ARG_PROXY);
+        try {
+            String proxyURL = new URI("http", userInfo, proxy.name, proxy.port, null, null, null).toString();
+            if (userInfo != null) {
+                arguments.addMasked(proxyURL);
+            } else {
+                arguments.add(proxyURL);
+            }
+        } catch (URISyntaxException e) {
+            if (userInfo != null) {
+                arguments.addMasked(userInfo + "@" + proxy.name + ":" + proxy.port);
+            } else {
+                arguments.add(proxy.name + ":" + proxy.port);
+            }
+        }
+    }
+
+    public CLICommand<Void> arguments(String[] args) {
+        ArgumentListBuilder arguments = new ArgumentListBuilder();
+        buildProxyArguments(arguments);
+        arguments.add(args);
+
+        return new CLICommand<>(executable, arguments, new EnvVars());
+    }
 }

@@ -16,25 +16,25 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
-import jenkins.plugin.android.emulator.sdk.cli.AVDManagerCLIBuilder;
+import jenkins.plugin.android.emulator.sdk.cli.ADBCLIBuilder;
 import jenkins.plugin.android.emulator.sdk.cli.CLICommand;
 import jenkins.plugin.android.emulator.sdk.home.HomeLocator;
 import jenkins.plugin.android.emulator.tools.AndroidSDKInstallation;
 
-public class AVDManagerStep extends AbstractCLIStep {
-    private class AVDManagerStepExecution extends AbstractCLIStepExecution {
+public class ADBStep extends AbstractCLIStep {
+    private class ADBStepExecution extends AbstractCLIStepExecution {
         private static final long serialVersionUID = 1L;
 
-        protected AVDManagerStepExecution(StepContext context) {
+        protected ADBStepExecution(StepContext context) {
             super(emulatorTool, homeLocationStrategy, context);
         }
 
         @Override
         protected Void doRun(AndroidSDKInstallation sdk, TaskListener listener, EnvVars env) throws Exception {
-            FilePath avdManager = sdk.getToolLocator().getAVDManager(getContext().get(Launcher.class));
+            FilePath adb = sdk.getToolLocator().getADB(getContext().get(Launcher.class));
 
             String[] argumentsExp = env.expand(arguments.replaceAll("[\t\r\n]+", " ")).split("\\s+");
-            CLICommand<Void> cli = AVDManagerCLIBuilder.with(avdManager) //
+            CLICommand<Void> cli = ADBCLIBuilder.with(adb) //
                     .arguments(argumentsExp) //
                     .withEnv(env);
             return quiet ? cli.execute() : cli.execute(listener);
@@ -42,28 +42,28 @@ public class AVDManagerStep extends AbstractCLIStep {
 
     }
 
-    private static final long serialVersionUID = -9142762434729619710L;
+    private static final long serialVersionUID = -1557453962312014910L;
 
     @DataBoundConstructor
-    public AVDManagerStep(@Nonnull String emulatorTool, @Nonnull HomeLocator homeLocationStrategy, @Nonnull String arguments) {
+    public ADBStep(@Nonnull String emulatorTool, @Nonnull HomeLocator homeLocationStrategy, @Nonnull String arguments) {
         super(emulatorTool, homeLocationStrategy, arguments);
     }
 
     @Override
     public StepExecution start(StepContext context) throws Exception {
-        return new AVDManagerStepExecution(context);
+        return new ADBStepExecution(context);
     }
 
     @Extension
     public static class DescriptorImpl extends StepDescriptor {
         @Override
         public String getFunctionName() {
-            return "avdmanager";
+            return "adb";
         }
 
         @Override
         public String getDisplayName() {
-            return Messages.AVDManagerStep_displayName();
+            return Messages.ADBStep_displayName();
         }
 
         @Override

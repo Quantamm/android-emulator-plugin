@@ -375,7 +375,7 @@ public class AVDManagerCLIBuilder {
         EnvVars env = new EnvVars();
         additionalEnv(env);
 
-        return new CLICommand<>(executable, arguments, env);
+        return new CLICommand<Void>(executable, arguments, env).withInput("\r\n");
     }
 
 }

@@ -115,4 +115,12 @@ public class ADBCLIBuilder {
         return arguments;
     }
 
+    public CLICommand<Void> arguments(String[] args) {
+        ArgumentListBuilder arguments = buildGlobalOptions();
+        arguments.add(args);
+
+        return new CLICommand<Void>(executable, arguments, buildEnvVars()) //
+                .withInput("\r\n");
+    }
+
 }

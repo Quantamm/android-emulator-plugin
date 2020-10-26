@@ -9,8 +9,6 @@ import hudson.FilePath;
 import hudson.model.Computer;
 import hudson.model.Node;
 import hudson.model.TaskListener;
-import hudson.plugins.android_emulator.Constants;
-import jenkins.plugin.android.emulator.AndroidSDKConstants;
 import jenkins.plugin.android.emulator.AndroidSDKUtil;
 import jenkins.plugin.android.emulator.sdk.home.HomeLocator;
 import jenkins.plugin.android.emulator.tools.AndroidSDKInstallation;
@@ -55,16 +53,7 @@ abstract class AbstractCLIStepExecution extends SynchronousNonBlockingStepExecut
 
         // configure home location
         FilePath homeLocation = homeLocationStrategy.locate(workspace);
-        if (homeLocation != null) {
-            env.put(Constants.ENV_VAR_ANDROID_SDK_HOME, homeLocation.getRemote());
-
-            FilePath emulatorLocation = homeLocation.child(AndroidSDKConstants.ANDROID_CACHE);
-            env.put(AndroidSDKConstants.ENV_ANDROID_EMULATOR_HOME, emulatorLocation.getRemote());
-
-            FilePath avdPath = emulatorLocation.child("avd");
-            avdPath.mkdirs(); // ensure that this folder exists
-            env.put(AndroidSDKConstants.ENV_ANDROID_AVD_HOME, avdPath.getRemote());
-        }
+        HomeLocator.buildEnvVars(homeLocation, env);
 
         return doRun(sdk, listener, env);
     }

@@ -23,13 +23,20 @@
  */
 package jenkins.plugin.android.emulator.sdk.home;
 
+import java.io.IOException;
+import java.io.Serializable;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
+import hudson.AbortException;
+import hudson.EnvVars;
 import hudson.ExtensionPoint;
 import hudson.FilePath;
 import hudson.model.AbstractDescribableImpl;
-
-import java.io.Serializable;
-
-import javax.annotation.Nonnull;
+import hudson.model.Computer;
+import hudson.plugins.android_emulator.Constants;
+import jenkins.plugin.android.emulator.AndroidSDKConstants;
 
 /**
  * Strategy pattern that decides the location of the SDK home location for a
@@ -54,4 +61,17 @@ public abstract class HomeLocator extends AbstractDescribableImpl<HomeLocator> i
         return (HomeLocatorDescriptor) super.getDescriptor();
     }
 
+    public static void buildEnvVars(@Nonnull FilePath homeLocation, @CheckForNull EnvVars env) throws IOException, InterruptedException {
+        if (env == null) {
+            env = new EnvVars();
+        }
+        env.put(Constants.ENV_VAR_ANDROID_SDK_HOME, homeLocation.getRemote());
+
+        FilePath emulatorLocation = homeLocation.child(AndroidSDKConstants.ANDROID_CACHE);
+        env.put(AndroidSDKConstants.ENV_ANDROID_EMULATOR_HOME, emulatorLocation.getRemote());
+
+        FilePath avdPath = emulatorLocation.child("avd");
+        avdPath.mkdirs(); // ensure that this folder exists
+        env.put(AndroidSDKConstants.ENV_ANDROID_AVD_HOME, avdPath.getRemote());
+    }
 }

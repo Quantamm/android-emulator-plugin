@@ -17,6 +17,7 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.plugins.android_emulator.Constants;
+import jenkins.model.Jenkins;
 import jenkins.plugin.android.emulator.sdk.cli.CLICommand;
 import jenkins.plugin.android.emulator.sdk.cli.SDKManagerCLIBuilder;
 import jenkins.plugin.android.emulator.sdk.home.HomeLocator;
@@ -36,6 +37,7 @@ public class SDKManagerStep extends AbstractCLIStep {
 
             String[] argumentsExp = env.expand(arguments.replaceAll("[\t\r\n]+", " ")).split("\\s+");
             CLICommand<Void> cli = SDKManagerCLIBuilder.with(sdkManager) //
+                    .proxy(Jenkins.get().proxy) //
                     .sdkRoot(env.get(Constants.ENV_VAR_ANDROID_SDK_ROOT)) //
                     .arguments(argumentsExp) //
                     .withEnv(env);
