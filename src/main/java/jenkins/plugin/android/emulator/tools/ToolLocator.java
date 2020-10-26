@@ -50,6 +50,9 @@ public class ToolLocator {
         public String call() throws IOException {
             Platform currentPlatform = platform;
             File toolHome = new File(home, tool.toolLocator.findInSdk(false));
+            if (!toolHome.exists()) {
+                toolHome = new File(home, tool.toolLocator.findInSdk(true));
+            }
             File cmd = new File(toolHome, tool.getExecutable(currentPlatform != Platform.WINDOWS));
             if (cmd.exists()) {
                 return cmd.getPath();

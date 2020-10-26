@@ -167,6 +167,9 @@ public class AndroidSDKInstaller extends DownloadFromUrlInstaller {
 
     private void installBasePackages(FilePath sdkRoot, TaskListener log) throws IOException, InterruptedException {
         FilePath sdkmanager = sdkRoot.child("tools").child("bin").child("sdkmanager" + platform.extension);
+        if (!sdkmanager.exists()) {
+            sdkmanager = sdkRoot.child("cmdline-tools").child("bin").child("sdkmanager" + platform.extension);
+        }
 
         String remoteSDKRoot = sdkRoot.getRemote();
         String androidHome = getSDKHome(sdkRoot).getRemote();
@@ -184,7 +187,7 @@ public class AndroidSDKInstaller extends DownloadFromUrlInstaller {
         List<String> defaultPackages = DEFAULT_PACKAGES.stream() //
                 .filter(defaultPackage -> packages.getInstalled().stream().noneMatch(i -> {
                     if (defaultPackage.endsWith("*")) {
-                        String defPkg = defaultPackage.replace("*", "");
+                        String defPkg = StringUtils.removeEnd(defaultPackage, "*");
                         return i.getId().startsWith(defPkg);
                     }
                     return defaultPackage.equals(i.getId());
