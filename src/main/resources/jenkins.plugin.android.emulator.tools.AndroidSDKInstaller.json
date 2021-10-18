@@ -1,6 +1,11 @@
 {
   "list": [
     {
+      "id": "cmdline-tools:4.0",
+      "url": "https://dl.google.com/android/repository/commandlinetools-{os}-7302050_latest.zip",
+      "name": "Command-line Tools 4.0"
+    },
+    {
       "id": "cmdline-tools:3.0",
       "url": "https://dl.google.com/android/repository/commandlinetools-{os}-6858069_latest.zip",
       "name": "Command-line Tools 3.0"
