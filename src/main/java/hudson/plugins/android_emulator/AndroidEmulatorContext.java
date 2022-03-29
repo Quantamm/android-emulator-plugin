@@ -49,17 +49,16 @@ public class AndroidEmulatorContext {
 
         // ADB allows up to 64 local devices, each of which uses two consecutive ports: one for the
         // user telnet interface, and one to communicate with ADB.  These pairs start at port 5554.
-        // http://android.googlesource.com/platform/system/core/+/d387acc/adb/adb.h#206
-        // http://android.googlesource.com/platform/system/core/+/d387acc/adb/transport_local.cpp#44
+        // https://android.googlesource.com/platform/system/core/+/d387acc/adb/adb.h#206
+        // https://android.googlesource.com/platform/system/core/+/d387acc/adb/transport_local.cpp#44
         //
         // So long as the ADB server automatically registers itself with any emulators in the
-        // standard port range of 5555–5861, then we should avoid using that port range.
+        // standard port range of 5555–5681, then we should avoid using that port range.
         // Otherwise, when we run multiple ADB servers and emulators at the same time, each of the
         // ADB servers will race to register with each emulator, meaning that each build will most
         // likely end up with an emulator that always ends up appearing to be "offline".
-        // See http://b.android.com/205197
         final int PORT_RANGE_START = 5554 + (2 * 64);
-        final int PORT_RANGE_END = PORT_RANGE_START + (2 * 64);
+        final int PORT_RANGE_END = PORT_RANGE_START + (8 * 64);
 
         // When using the emulator `-port` option, the first port must be even, so here we reserve
         // three consecutive ports, ensuring that we will get an even port followed by an odd
@@ -79,7 +78,7 @@ public class AndroidEmulatorContext {
         // Reserve two further ports for the ADB server and the callback socket.
         // Use a separate port range so as not to tie up emulator ports unnecessarily
         final int SERVER_PORT_RANGE_START = PORT_RANGE_END;
-        final int SERVER_PORT_RANGE_END = SERVER_PORT_RANGE_START + 64;
+        final int SERVER_PORT_RANGE_END = SERVER_PORT_RANGE_START + 256;
         ports = portAllocator.allocatePortRange(build, SERVER_PORT_RANGE_START,
                 SERVER_PORT_RANGE_END, 2, false);
         adbServerPort = ports[0];
